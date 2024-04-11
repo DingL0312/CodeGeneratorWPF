@@ -1,12 +1,119 @@
 ﻿<UserControl x:Class="CodeGeneratorWPF.Views.HomeView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:CodeGeneratorWPF.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:CodeGeneratorWPF"
+             xmlns:vm="clr-namespace:CodeGeneratorWPF.ViewModel"
+             xmlns:views="clr-namespace:CodeGeneratorWPF.Views"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:HomeViewModel}">
     <Grid>
-        <Label>这是主页</Label>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <TextBlock Text="连接字符串" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10,0,0,0"/>
+            <TextBox Width="400" Text="{Binding ConnStr}" TextAlignment="Left" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,0,0,0" />
+            <Button Content="连接" Width="40" Command="{Binding ConnClickCommand}" />
+        </StackPanel>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ListView Grid.Column="0"
+                          ItemsSource="{Binding Tables}"
+                          SelectedItem="{Binding SelectedTable}"
+                          >
+                <!--<ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="table"  DisplayMemberBinding="{Binding TableName}"/>
+                        <GridViewColumn Header="comment"  DisplayMemberBinding="{Binding TableComment}"/>
+                    </GridView>
+
+                </ListView.View>-->
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Content="{Binding TableName}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+            </ListView>
+
+
+            <ListView Grid.Column="1"  ItemsSource="{Binding Columns}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="200" DisplayMemberBinding="{Binding Field}" />
+                    </GridView>
+                </ListView.View>
+
+            </ListView>
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="60" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" >
+                    <StackPanel Orientation="Horizontal" Margin="2">
+                        <TextBox MinWidth="200"  Text="{Binding ProjectPath}" />
+                        <Button Width="auto" Padding="4" Content="项目路径" Command="{Binding ProjectPathSelectCommand}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"  Margin="2">
+                        <TextBox MinWidth="200"  Text="{Binding DoPath}"/>
+                        <Button Width="auto" Padding="4"  Content="Do路径" Command="{Binding DoPathSelectCommand}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"  Margin="2">
+                        <TextBox MinWidth="200"  Text="{Binding DtoPath}"/>
+                        <Button Width="auto" Padding="4"  Content="Dto路径" Command="{Binding DtoPath}"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="2">
+                        <TextBox MinWidth="200"  Text="{Binding VoPath}"/>
+                        <Button Width="auto"  Padding="4" Content="Vo路径" Command="{Binding VoPathSelectCommand}"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="2">
+                        <TextBox MinWidth="200"  Text="{Binding ControllerPath}"/>
+                        <Button Width="auto" Padding="4"  Content="Controller路径" Command="{Binding ControllerPathSelectCommand}"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="2">
+                        <TextBox MinWidth="200"  Text="{Binding ApiPath}"/>
+                        <Button Width="auto" Padding="4"  Content="Api路径" Command="{Binding ApiPathSelectCommand}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="2">
+                        <TextBox MinWidth="200"  Text="{Binding MapperPath}"/>
+                        <Button Width="auto" Padding="4"  Content="Mapper路径" Command="{Binding MapperPathSelectCommand}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="2">
+                        <TextBox MinWidth="200"  Text="{Binding MapStructPath}"/>
+                        <Button Width="auto" Padding="4"  Content="MapStruct路径" Command="{Binding MapStructPathSelectCommand}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="2">
+                        <TextBox MinWidth="200"  Text="{Binding ServicePath}"/>
+                        <Button Width="auto" Padding="4"  Content="Service路径" Command="{Binding ServicePathSelectCommand}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="2">
+                        <TextBox MinWidth="200"  Text="{Binding ServiceImplPath}"/>
+                        <Button Width="auto" Padding="4"  Content="ServiceImpl路径" Command="{Binding ServiceImplPathSelectCommand}"/>
+                    </StackPanel>
+
+                    <Separator />
+
+                </StackPanel>
+                <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Orientation="Horizontal">
+                    <Button Content="生成" Margin="10,0" Height="50" Width="200" Command="{Binding GeneratorClickCommand}"/>
+                    <Button Content="配置选项" Height="50" Width="200" Command="{Binding SettingClickCommand}"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
     </Grid>
 </UserControl>

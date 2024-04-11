@@ -7,15 +7,14 @@ using System.Threading.Tasks;
 /*
  * @Description: 
  * @Author: DLiang
- * @Date: 2024/1/2 11:32:10
+ * @Date: 2024/1/5 17:28:51
  * @Copyright: 2023 www.31meta.cn Inc. All rights reserved.
 */
 
-namespace CodeGeneratorWPF.Models
+namespace CodeGeneratorWPF.Models.TemplateModel
 {
-   public class TableModel
+    public class EntityModel : BaseTemplateModel
     {
-        public string? TableName{ get; set; }
-        public string? TableComment{ get; set; }
+        public List<ColumnModel> list { get; set; }
     }
 }

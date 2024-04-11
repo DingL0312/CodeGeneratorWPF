@@ -2,19 +2,28 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using CodeGeneratorWPF.Helper;
 using CodeGeneratorWPF.Models;
+using CodeGeneratorWPF.Models.TemplateModel;
 using CodeGeneratorWPF.Services;
 using CodeGeneratorWPF.Services.Impl;
+using CodeGeneratorWPF.Stores;
 using CodeGeneratorWPF.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using JinianNet.JNTemplate;
+using Microsoft.Extensions.DependencyInjection;
 using MySqlConnector;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using MessageBox = System.Windows.MessageBox;
+using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
 /*
  * @Description:
@@ -26,67 +35,21 @@ using MySqlConnector;
 namespace CodeGeneratorWPF.ViewModel
 {
     public partial class MainWindowViewModel : BaseViewModel
-
     {
-        private readonly ISqlService _sqlService;
-
-        public MainWindowViewModel()
-        {
-
-        }
-        public MainWindowViewModel(ISqlService sqlService)
-        {
-                tables = new();
-            _sqlService = sqlService;
-
-            ConnStr = "server=localhost;port=3308;database=sy_saas_main;user=root;password=123456;";
-        }
+        private readonly NavigationStore _navigationStore;
 
         [ObservableProperty]
-        private ObservableCollection<TableModel> tables;
+        private BaseViewModel? currentViewModel;
 
-        [ObservableProperty]
-        private TableModel selectedTable;
-        partial void OnSelectedTableChanged(TableModel selectedTable)
+        public MainWindowViewModel(NavigationStore navigationStore)
         {
-            TableSelectedChanged();
+            _navigationStore = navigationStore;
+            CurrentViewModel = _navigationStore.CurrentBaseViewModel;
+            _navigationStore.CurrentViewModelChanged += () =>
+            {
+                CurrentViewModel = _navigationStore.CurrentBaseViewModel;
+            };
         }
 
-        [ObservableProperty]
-        private string connStr;
-
-
-        [ObservableProperty]
-        private ObservableCollection<ColumnModel> columns;
-
-        [RelayCommand]
-        void ConnClick()
-        {
-            if (string.IsNullOrEmpty(connStr))
-            {
-                MessageBox.Show("连接字符串不能为空");
-                return;
-            }
-            try
-            {
-                MysqlHelper.ConnStr = connStr;
-
-                Tables = _sqlService.GetTables();
-
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-            }
-        }
-
-
-        private void TableSelectedChanged()
-        {
-            if (selectedTable != null)
-            {
-                Columns = _sqlService.GetColumns(selectedTable.Name);
-            }
-        }
     }
 }

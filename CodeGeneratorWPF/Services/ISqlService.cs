@@ -18,7 +18,7 @@ namespace CodeGeneratorWPF.Services
 {
     public interface ISqlService
     {
-        ObservableCollection<TableModel> GetTables();
+        ObservableCollection<TableModel> GetTables(string table_schema);
         ObservableCollection<ColumnModel> GetColumns(string tableName);
     }
 }

@@ -4,6 +4,7 @@ using CodeGeneratorWPF.Services;
 using CodeGeneratorWPF.Services.Impl;
 using CodeGeneratorWPF.Stores;
 using CodeGeneratorWPF.ViewModel;
+using CodeGeneratorWPF.Views;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CodeGeneratorWPF
@@ -21,20 +22,28 @@ namespace CodeGeneratorWPF
 
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<NavigationStore>();
+            services.AddSingleton<HomeStore>();
 
             services.AddSingleton<MainWindowViewModel>();
 
             services.AddSingleton(s => new MainWindow(s.GetRequiredService<MainWindowViewModel>()));
 
             services.AddTransient<ConnViewModel>();
+            services.AddTransient<SettingViewModel>();
+            services.AddTransient<HomeViewModel>();
 
             services.AddSingleton<ISqlService, SqlService>();
+            services.AddSingleton<IGeneratorService, GeneratorService>();
+
 
             _serviceProvider = services.BuildServiceProvider();
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            INavigationService navigationService = _serviceProvider.GetRequiredService<INavigationService>();
+            navigationService.Navigate<HomeViewModel>();
+
             base.OnStartup(e);
             MainWindow mw = _serviceProvider.GetRequiredService<MainWindow>();
             mw.Show();
